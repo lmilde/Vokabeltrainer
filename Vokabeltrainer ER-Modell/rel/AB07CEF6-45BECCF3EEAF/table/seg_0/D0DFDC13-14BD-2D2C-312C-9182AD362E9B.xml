@@ -1,0 +1,47 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D0DFDC13-14BD-2D2C-312C-9182AD362E9B" name="Language">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>60166484-C0CC-7EE5-6149-1B6E4447961D</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID" id="E81E3A07-79E5-C3F9-A19D-BCB7497A3931">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>9CAA89F9-ABBD-3AE1-72CF-361A5A8AC650</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>297B7A15-D456-5D52-6675-B97FBD4EE797</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Name" id="75CEA822-72CD-C05D-22A2-3EB83EF0E851">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>9180ACC2-256F-8CA9-3336-268658421331</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="219B813C-72AB-F475-7F30-C28FB0C0E823" name="Language_PK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>BC2140E1-9740-61F4-A5D1-972604EF524D</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E81E3A07-79E5-C3F9-A19D-BCB7497A3931"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

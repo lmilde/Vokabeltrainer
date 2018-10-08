@@ -1,0 +1,59 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="hasv2" directorySegmentName="seg_0" id="EDA47F68-177D-D918-8E63-C1290517AE94">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 11:00:44 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>897FCC99-E1A7-08C7-4B32-62BFE7193CB3</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>D1FDCEDA-D15D-C165-3704-B37BF2F12A98</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<attribute name="Categroy" id="C285D181-4BAB-C917-C7EE-FFCE7C8F982A">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 11:00:50 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</attribute>
+<attribute name="Counter" id="1660D070-D96E-12BD-630B-93525623276C">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 11:00:57 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</attribute>
+<attribute name="Timestamp" id="B46BF8B3-2848-57B6-2D0A-39333EA90129">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 11:01:07 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>78964FB7-05DB-37E7-FFDF-14A44B54A492</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</attribute>
+</attributes>
+</Relation>

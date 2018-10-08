@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="FBAD03BD-1FDD-54FF-AE30-94E8674E4F7E" mainViewID="0752F88E-5079-A895-0CEB-CF431239FB2E">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:24:13 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

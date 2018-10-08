@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<ProcessModel class="oracle.dbtools.crest.model.design.process.ProcessModel" name="Process Model" id="AA82A6CD-FC88-F8AE-95F2-48FDC3D65988">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 10:48:04 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</ProcessModel>

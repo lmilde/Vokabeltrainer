@@ -1,0 +1,58 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="0FC4749F-50BF-1553-EA96-FA7147175E42" name="Unit">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:25:10 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Name" id="3BF3D31F-CBEE-7E0A-6215-220226F6FF9C">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:25:19 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>297B7A15-D456-5D52-6675-B97FBD4EE797</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID" id="C586C34B-0905-B2F1-9F5B-672355FA17B0">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:25:25 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="F65782B6-8ABE-62F8-5584-126D3B60F4A1" name="Unit PK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:25:31 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>C586C34B-0905-B2F1-9F5B-672355FA17B0</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="AC4FE84C-893C-95B4-C8F0-58DF5543D5EA" mainViewID="51434CC3-E332-412D-138B-A2E0E20078EB">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 10:48:04 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

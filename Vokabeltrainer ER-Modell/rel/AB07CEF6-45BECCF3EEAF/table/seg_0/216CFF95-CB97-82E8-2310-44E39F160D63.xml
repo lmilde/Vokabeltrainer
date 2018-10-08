@@ -1,0 +1,73 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="216CFF95-CB97-82E8-2310-44E39F160D63" name="User">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>D1FDCEDA-D15D-C165-3704-B37BF2F12A98</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID" id="9BF13C6C-04B1-C799-F93F-0C5377B27B1C">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>B920E395-C684-117C-C31A-01B64FD59EEB</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Email" id="5BCD971A-1153-68DB-886C-904DBEEE2B17">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>BA5277FF-769C-A85F-1B55-4F424C2FB51A</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>297B7A15-D456-5D52-6675-B97FBD4EE797</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Firstname" id="5B5AE02D-B75E-2BB5-CF50-5AAAC5E5E5EE">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>650267DC-0AD0-85DD-AFA5-1C5F1A6FD047</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>297B7A15-D456-5D52-6675-B97FBD4EE797</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Lastname" id="C6B1C06A-FBDC-49CB-4AD5-B8E0EE00580E">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>4AB1E2BF-932A-3ABF-9453-2B4E027BA1FF</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>297B7A15-D456-5D52-6675-B97FBD4EE797</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="5E71ADE3-8297-70C8-CCB5-BC9F26C6F6E3" name="User_PK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>7CECA911-104F-0C08-83AA-7D92924629D4</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9BF13C6C-04B1-C799-F93F-0C5377B27B1C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

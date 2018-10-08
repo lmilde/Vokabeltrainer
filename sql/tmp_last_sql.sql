@@ -1,0 +1,726 @@
+-- change behavior of pl/sql compiler, optimization level, pl/scope and warnings
+alter session set PLSQL_OPTIMIZE_LEVEL=3;
+
+begin
+  if (sys.dbms_db_version.version <= 11) or
+     ((sys.dbms_db_version.version = 12) and (sys.dbms_db_version.release <= 1)) then
+    -- until 12.1
+    execute immediate 'alter session set PLSCOPE_SETTINGS=''IDENTIFIERS:ALL''';
+  else 
+    -- 12.2 and later
+    execute immediate 'alter session set PLSCOPE_SETTINGS=''IDENTIFIERS:ALL, STATEMENTS:ALL''';
+  end if;
+end;
+/
+
+-- enable all warnings:
+--
+-- alter session set PLSQL_WARNINGS='ENABLE:ALL';
+--
+-- how to exclude warnings:
+--
+-- 05018: omitted optional AUTHID clause; default value DEFINER used
+--   -> may not be relevant
+-- 06005: inling of call of procedure '...' was done
+--   -> due to PLSQL_OPTIMIZE_LEVEL=3, inlining.
+-- 06006: uncalled procedure "..." is removed
+--   -> due to inlining.
+-- 06009: OTHERS handler does not end in RAISE or RAISE_APPLICATION_ERROR
+--   -> false positives?
+alter session set PLSQL_WARNINGS='ENABLE:ALL', 'DISABLE:(06005,06006)';
+
+-- drop is drop
+alter session set RECYCLEBIN=off;
+BEGIN
+   FOR cur_rec IN (SELECT object_name, object_type
+                     FROM user_objects
+                    WHERE object_type IN
+                             ('TABLE',
+                              'VIEW',
+                              'PACKAGE',
+                              'PROCEDURE',
+                              'FUNCTION',
+                              'SEQUENCE'
+                             ))
+   LOOP
+      BEGIN
+         IF cur_rec.object_type = 'TABLE'
+         THEN
+            EXECUTE IMMEDIATE    'DROP '
+                              || cur_rec.object_type
+                              || ' "'
+                              || cur_rec.object_name
+                              || '" CASCADE CONSTRAINTS';
+         ELSE
+            EXECUTE IMMEDIATE    'DROP '
+                              || cur_rec.object_type
+                              || ' "'
+                              || cur_rec.object_name
+                              || '"';
+         END IF;
+      EXCEPTION
+         WHEN OTHERS
+         THEN
+            DBMS_OUTPUT.put_line (   'FAILED: DROP '
+                                  || cur_rec.object_type
+                                  || ' "'
+                                  || cur_rec.object_name
+                                  || '"'
+                                 );
+      END;
+   END LOOP;
+   FOR I IN (SELECT JOB_NAME FROM ALL_SCHEDULER_JOBS) LOOP
+DBMS_SCHEDULER.DROP_JOB(I.JOB_NAME);
+END LOOP;
+END;
+/
+CREATE TABLE T_LANGUAGE(
+ID NUMBER GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1),
+NAME VARCHAR(5) NOT NULL,
+CONSTRAINT LANGUAGE_PK PRIMARY KEY(ID)
+);
+CREATE TABLE T_RESSOURCES(
+ID NUMBER GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1),
+RESSOURCE VARCHAR2(256),
+CONSTRAINT RESSOURCES_PK PRIMARY KEY (ID)
+);
+CREATE TABLE T_UNIT(
+ID NUMBER GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1),
+NAME VARCHAR(16) NOT NULL,
+CONSTRAINT UNIT_PK PRIMARY KEY(ID)
+);
+CREATE TABLE T_USER(
+ID NUMBER GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1),
+EMAIL VARCHAR2(128) NOT NULL,
+FIRSTNAME VARCHAR(32) NOT NULL,
+LASTNAME VARCHAR(32) NOT NULL,
+CONSTRAINT USER_PK PRIMARY KEY(ID)
+);
+CREATE TABLE T_VOCABULARY(
+ID NUMBER GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1),
+VOCABULARY VARCHAR2(256) NOT NULL,
+UNIT_ID NUMBER NOT NULL,
+LANGUAGE_ID NUMBER NOT NULL,
+CONSTRAINT VOCABULARY_PK PRIMARY KEY(ID),
+CONSTRAINT UNIT_FK FOREIGN KEY(UNIT_ID) REFERENCES T_UNIT(ID),
+CONSTRAINT LANGUAGE_VOC_FK FOREIGN KEY(LANGUAGE_ID) REFERENCES T_LANGUAGE(ID)
+);
+CREATE TABLE T_STATISTIC(
+ID NUMBER GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1),
+TIMESTAMP_GERNERATED TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+TIMESTAMP_PRACTICE_DONE TIMESTAMP(6),
+USER_ID NUMBER NOT NULL,
+CONSTRAINT STATISTIC_PK PRIMARY KEY(ID),
+CONSTRAINT USER_FK FOREIGN KEY(USER_ID) REFERENCES T_USER(ID)
+);
+CREATE TABLE T_VOCABULARY_IN_USER(
+ID NUMBER GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1),
+CATEGORY NUMBER NOT NULL,
+COUNTER NUMBER NOT NULL,
+USER_ID NUMBER NOT NULL,
+VOCABULARY_ID NUMBER NOT NULL,
+TIMESTAMP_LAST_PRACTICE TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+CONSTRAINT VOCABULARY_IN_USER_PK PRIMARY KEY (VOCABULARY_ID, USER_ID),
+CONSTRAINT USER_VOC_FK FOREIGN KEY (USER_ID) REFERENCES T_USER(ID),
+CONSTRAINT VOCABULARY_USER_FK FOREIGN KEY (VOCABULARY_ID) REFERENCES T_VOCABULARY(ID)
+);
+CREATE TABLE T_TRANSLATION(
+ID NUMBER GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1),
+TRANSLATION VARCHAR2(40) NOT NULL,
+VOCABULARY VARCHAR2(40) NOT NULL,
+VOCABULARY_ID NUMBER NOT NULL,
+LANGUAGE_ID NUMBER NOT NULL,
+CONSTRAINT TRANSLATION_PK PRIMARY KEY(ID),
+CONSTRAINT VOCABULARY_FK FOREIGN KEY(VOCABULARY_ID) REFERENCES T_VOCABULARY(ID),
+CONSTRAINT LANGUAGE_FK FOREIGN KEY(LANGUAGE_ID) REFERENCES T_LANGUAGE(ID)
+);
+CREATE TABLE T_VOCABULARY_IN_STATISTIC(
+ID NUMBER GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1),
+CORRECT NUMBER,
+STATISTIC_ID NUMBER NOT NULL,
+VOCABULARY_ID NUMBER NOT NULL,
+CONSTRAINT VOCABULARY_IN_STATISTIC_PK PRIMARY KEY(VOCABULARY_ID, STATISTIC_ID),
+CONSTRAINT STATISTIC_VOC_FK FOREIGN KEY(STATISTIC_ID) REFERENCES T_STATISTIC (ID),
+CONSTRAINT VOCABULARY_STAT_FK FOREIGN KEY (VOCABULARY_ID) REFERENCES T_VOCABULARY(ID)
+);
+CREATE OR REPLACE PROCEDURE CATEGORY(P_CATEGORY IN NUMBER) AUTHID CURRENT_USER
+    IS
+    V_MESSAGE VARCHAR2(8192) := ' ';
+    CRLF        VARCHAR2(2)  := CHR(13)||CHR(10);
+    V_USER_ID NUMBER;
+    V_FIRSTNAME VARCHAR2(16);
+    V_RECIPIENT VARCHAR2(256);
+    BEGIN
+    FOR I IN (SELECT DISTINCT USER_ID AS V_USER_ID FROM V_ALL_VOCABULARY_ENTRIES)
+    LOOP
+    SELECT FIRSTNAME INTO V_FIRSTNAME FROM T_USER WHERE ID = I.V_USER_ID;
+    SELECT EMAIL INTO V_RECIPIENT FROM T_USER WHERE ID = I.V_USER_ID;
+        V_MESSAGE := GETTER.GET_RESSOURCE(1) || V_FIRSTNAME || ',' || CRLF ||
+        GETTER.GET_RESSOURCE(2)|| CRLF ||
+        GETTER.GET_RESSOURCE(3) || CRLF || CRLF ||
+        'BEGIN' || CRLF;
+            FOR J IN (SELECT DISTINCT VOC_ID AS V_VOCABULARY_ID FROM V_ALL_VOCABULARY_ENTRIES WHERE CATEGORY = P_CATEGORY AND USER_ID = I.V_USER_ID)
+            LOOP
+            V_MESSAGE := V_MESSAGE || '/*' || GETTER.GET_VOCABULARY_BY_ID(J.V_VOCABULARY_ID) || ': ' || '*/' || 'ANSWER_VOC(' || J.V_VOCABULARY_ID || ', ' || '''''' || ', ' || I.V_USER_ID || ');' || CRLF;
+            END LOOP;
+            INSERTS.CREATE_NEW_STATISTIC(P_CATEGORY, ' ', I.V_USER_ID);
+        V_MESSAGE := V_MESSAGE || 'END;';
+        SEND_MAIL(V_RECIPIENT, V_MESSAGE);
+        END LOOP;
+    END;
+/
+CREATE OR REPLACE PROCEDURE SEND_MAIL (P_RECIPIENT IN VARCHAR2, P_MESSAGE IN VARCHAR2) AUTHID CURRENT_USER
+    IS
+    V_FROM      VARCHAR2(80) := 'trainer.vocabeln@lernedies.com';
+    V_RECIPIENT VARCHAR2(80) := P_RECIPIENT;
+    V_SUBJECT   VARCHAR2(80) := 'Vokabeln lernen';
+    V_MAIL_HOST VARCHAR2(30) := 'mail.triology.de';
+    V_MAIL_CONN UTL_SMTP.CONNECTION;
+
+    CRLF        VARCHAR2(2)  := CHR(13)||CHR(10);
+    BEGIN
+        V_MAIL_CONN := UTL_SMTP.OPEN_CONNECTION(V_MAIL_HOST, 25);
+        UTL_SMTP.HELO(V_MAIL_CONN, V_MAIL_HOST);
+        UTL_SMTP.MAIL(V_MAIL_CONN, V_FROM);
+        UTL_SMTP.RCPT(V_MAIL_CONN, V_RECIPIENT);
+        UTL_SMTP.DATA(V_MAIL_CONN,
+        'Date: '   || TO_CHAR(sysdate, 'Dy, DD Mon YYYY hh24:mi:ss') || CRLF ||
+        'From: '   || V_FROM || CRLF ||
+        'Subject: '|| V_SUBJECT || CRLF ||
+        'To: '     || V_RECIPIENT || CRLF ||
+        CRLF ||
+        P_MESSAGE
+        );
+        utl_smtp.QUIT(V_MAIL_CONN);
+        EXCEPTION
+        WHEN UTL_SMTP.TRANSIENT_ERROR OR UTL_SMTP.PERMANENT_ERROR then
+        RAISE_APPLICATION_ERROR(-20000, 'Unable to send mail', TRUE);
+    END;
+/
+CREATE OR REPLACE PROCEDURE SET_TIMESTAMP_DONE AUTHID CURRENT_USER
+    IS
+    BEGIN
+        FOR I IN (SELECT ID AS V_STATISTIC_ID FROM T_STATISTIC)
+        LOOP
+   		UPDATE T_STATISTIC SET TIMESTAMP_PRACTICE_DONE = CURRENT_TIMESTAMP WHERE ID = I.V_STATISTIC_ID
+           AND NOT EXISTS (SELECT COUNT(*) FROM T_VOCABULARY_IN_STATISTIC WHERE STATISTIC_ID = I.V_STATISTIC_ID GROUP BY CORRECT HAVING CORRECT IS NULL);
+        COMMIT;
+        END LOOP;
+    END;
+/
+CREATE VIEW V_ALL_VOCABULARY_ENTRIES AS
+SELECT A.*, COALESCE(VU.CATEGORY, 0) AS CATEGORY FROM
+(SELECT US.ID AS USER_ID, U.ID AS UNIT_ID, U.NAME AS UNIT_NAME, V.ID AS VOC_ID, V.VOCABULARY, V.LANGUAGE_ID AS VOC_LANG_ID, VL.NAME AS VOC_LANG, T.ID AS TRA_ID, T.TRANSLATION, T.LANGUAGE_ID AS TRA_LANG_ID, LL.NAME AS TRA_LANG
+FROM T_USER US, T_VOCABULARY V
+INNER JOIN T_TRANSLATION T ON V.ID = T.VOCABULARY_ID
+INNER JOIN T_UNIT U ON V.UNIT_ID = U.ID
+INNER JOIN T_LANGUAGE VL ON VL.ID = V.LANGUAGE_ID
+INNER JOIN T_LANGUAGE LL ON LL.ID = T.LANGUAGE_ID) A
+LEFT JOIN T_VOCABULARY_IN_USER VU ON VU.USER_ID = A.USER_ID;
+CREATE VIEW V_VOCABULARY_TO_LEARN AS
+SELECT VOCABULARY_ID, S.USER_ID AS USER_ID, U.EMAIL AS EMAIL
+FROM T_VOCABULARY_IN_STATISTIC VS
+INNER JOIN T_STATISTIC S ON VS.STATISTIC_ID = S.ID
+INNER JOIN T_USER U ON U.ID = S.USER_ID
+WHERE CORRECT IS NULL; 
+create or replace package  answer
+authid current_user
+as
+FUNCTION CHECK_ANSWER(P_VOCABULARY_ID IN NUMBER, P_ANSWER IN VARCHAR2)
+RETURN BOOLEAN;
+
+PROCEDURE ANSWER_VOC (P_VOCABULARY_ID IN NUMBER, P_ANSWER IN VARCHAR2, P_USER_ID IN NUMBER);
+PROCEDURE INSERT_COUNTER_AND_CATEGORY(P_USER_ID IN NUMBER, P_VOCABULARY_ID IN NUMBER, P_CORRECT IN NUMBER);
+end answer ;
+/
+create or replace package  getter
+authid current_user
+as
+FUNCTION GET_VOCABULARY_BY_ID(P_VOCABULARY_ID IN NUMBER)
+RETURN VARCHAR2;
+FUNCTION GET_RESSOURCE(P_RESSOURCE_ID IN NUMBER)
+RETURN VARCHAR2;
+FUNCTION GET_TRANSLATION_BY_VOCABULARY_ID (P_VOCABULARY_ID IN NUMBER)
+RETURN VARCHAR2;
+end getter ;
+/
+create or replace package  inserts
+authid current_user
+as
+PROCEDURE INSERT_NEW_LANGUAGE (P_LANGUAGE IN VARCHAR);
+PROCEDURE INSERT_NEW_UNIT (P_UNIT IN VARCHAR2);
+PROCEDURE INSERT_NEW_USER (P_FIRSTNAME IN VARCHAR2, P_LASTNAME IN VARCHAR2, P_EMAIL IN VARCHAR2);
+PROCEDURE INSERT_NEW_TRANSLATION (P_TRANSLATION IN VARCHAR2, P_VOCABULARY IN VARCHAR2, P_UNIT IN VARCHAR2, P_LANGUAGE IN VARCHAR);
+PROCEDURE INSERT_NEW_VOCABULARY (P_VOCABULARY IN VARCHAR2, P_UNIT IN VARCHAR2, P_LANGUAGE IN VARCHAR2);
+PROCEDURE CREATE_NEW_STATISTIC (P_CATEGORY IN NUMBER, P_UNIT IN VARCHAR2, P_USER_ID IN NUMBER);
+end inserts ;
+/
+create or replace package body  answer
+as
+FUNCTION CHECK_ANSWER(P_VOCABULARY_ID IN NUMBER, P_ANSWER IN VARCHAR2)
+    RETURN BOOLEAN
+    IS V_NUMBER_OF_ROWS_WITH_ANSWER NUMBER;
+    BEGIN
+        SELECT COUNT(*) INTO V_NUMBER_OF_ROWS_WITH_ANSWER FROM T_TRANSLATION WHERE TRANSLATION = P_ANSWER AND VOCABULARY_ID = P_VOCABULARY_ID;
+        RETURN V_NUMBER_OF_ROWS_WITH_ANSWER > 0;
+END CHECK_ANSWER;
+
+PROCEDURE ANSWER_VOC (P_VOCABULARY_ID IN NUMBER, P_ANSWER IN VARCHAR2, P_USER_ID IN NUMBER)
+    IS
+    V_CORRECT NUMBER;
+    V_VOCABULARY_ID NUMBER;
+    V_MESSAGE VARCHAR2(256);
+    CRLF        VARCHAR2(2)  := CHR(13)||CHR(10);
+    BEGIN
+            IF CHECK_ANSWER(P_VOCABULARY_ID, P_ANSWER) THEN
+            V_CORRECT := -1;
+            V_MESSAGE := GETTER.GET_RESSOURCE(4) || '''' || GETTER.GET_VOCABULARY_BY_ID(P_VOCABULARY_ID) || '''' || GETTER.GET_RESSOURCE(5) || CRLF ||
+                         GETTER.GET_RESSOURCE(7) || P_ANSWER || CRLF;
+            DBMS_OUTPUT.PUT_LINE(V_MESSAGE);
+
+            ELSE
+            V_CORRECT := 0;
+            V_MESSAGE := GETTER.GET_RESSOURCE(4) || '''' || GETTER.GET_VOCABULARY_BY_ID(P_VOCABULARY_ID) || '''' || GETTER.GET_RESSOURCE(6) || '''' || GETTER.GET_TRANSLATION_BY_VOCABULARY_ID(P_VOCABULARY_ID) || '''' || CRLF ||
+                         GETTER.GET_RESSOURCE(7) || P_ANSWER || CRLF;
+            DBMS_OUTPUT.PUT_LINE(V_MESSAGE);
+            END IF;
+        UPDATE T_VOCABULARY_IN_STATISTIC SET CORRECT = V_CORRECT WHERE VOCABULARY_ID = P_VOCABULARY_ID;
+        INSERT_COUNTER_AND_CATEGORY(P_USER_ID, P_VOCABULARY_ID, V_CORRECT);
+    COMMIT;
+    SET_TIMESTAMP_DONE();
+    END ANSWER_VOC;
+
+PROCEDURE INSERT_COUNTER_AND_CATEGORY(P_USER_ID IN NUMBER, P_VOCABULARY_ID IN NUMBER, P_CORRECT IN NUMBER)
+    IS
+    BEGIN
+        MERGE INTO T_VOCABULARY_IN_USER DEST USING (SELECT P_USER_ID AS USER_ID, P_VOCABULARY_ID AS VOCABULARY_ID FROM DUAL) SRC ON (SRC.USER_ID=DEST.USER_ID AND SRC.VOCABULARY_ID=DEST.VOCABULARY_ID)
+        WHEN MATCHED THEN
+            UPDATE SET
+            TIMESTAMP_LAST_PRACTICE = CURRENT_TIMESTAMP,
+            CATEGORY = CASE
+                        WHEN(P_CORRECT=-1 AND CATEGORY < 5 AND COUNTER = 5)
+                        THEN (CATEGORY + 1)
+                        ELSE CATEGORY
+                        END,
+            COUNTER = CASE
+                        WHEN ((P_CORRECT = 0 AND COUNTER = 0 ) OR (P_CORRECT = -1 AND COUNTER = 5))
+                        THEN 0
+                        ELSE(COUNTER+1)
+                        END
+            WHERE USER_ID = P_USER_ID AND VOCABULARY_ID = P_VOCABULARY_ID
+        WHEN NOT MATCHED THEN
+        INSERT (USER_ID, VOCABULARY_ID, CATEGORY, COUNTER)
+        VALUES (P_USER_ID, P_VOCABULARY_ID, 0, CASE
+                                                WHEN (P_CORRECT = -1) THEN 1
+                                                ELSE 0
+                                                END);
+        COMMIT;
+    END INSERT_COUNTER_AND_CATEGORY;
+end answer ;
+/
+create or replace package body  getter
+as
+FUNCTION GET_VOCABULARY_BY_ID(P_VOCABULARY_ID IN NUMBER)
+    RETURN VARCHAR2
+    IS V_VOCABULARY VARCHAR2(256);
+    BEGIN
+        SELECT VOCABULARY INTO V_VOCABULARY FROM T_VOCABULARY WHERE ID = P_VOCABULARY_ID;
+        RETURN V_VOCABULARY;
+    END GET_VOCABULARY_BY_ID;
+
+FUNCTION GET_RESSOURCE(P_RESSOURCE_ID IN NUMBER)
+    RETURN VARCHAR2
+    IS V_RESSOURCE VARCHAR2(256);
+    BEGIN
+        SELECT RESSOURCE INTO V_RESSOURCE FROM T_RESSOURCES WHERE ID = P_RESSOURCE_ID;
+        RETURN V_RESSOURCE;
+    END GET_RESSOURCE;
+
+FUNCTION GET_TRANSLATION_BY_VOCABULARY_ID (P_VOCABULARY_ID IN NUMBER)
+    RETURN VARCHAR2
+    IS V_TRANSLATION VARCHAR2(256);
+    BEGIN
+        SELECT TRANSLATION INTO V_TRANSLATION FROM T_TRANSLATION WHERE VOCABULARY_ID = P_VOCABULARY_ID;
+        RETURN V_TRANSLATION;
+    END GET_TRANSLATION_BY_VOCABULARY_ID;
+end getter ;
+/
+create or replace package body  inserts
+as
+PROCEDURE INSERT_NEW_LANGUAGE(P_LANGUAGE IN VARCHAR)
+	IS
+	BEGIN
+		MERGE INTO T_LANGUAGE DEST USING (SELECT P_LANGUAGE AS NAME FROM DUAL) SRC ON (SRC.NAME = DEST.NAME)
+		WHEN NOT MATCHED THEN
+			INSERT  (NAME) VALUES (P_LANGUAGE);
+		COMMIT;
+	END INSERT_NEW_LANGUAGE;
+
+PROCEDURE INSERT_NEW_UNIT (P_UNIT IN VARCHAR2)
+    IS
+    BEGIN
+        MERGE INTO T_UNIT DEST USING (SELECT P_UNIT AS NAME FROM DUAL) SRC ON (SRC.NAME = DEST.NAME)
+        WHEN NOT MATCHED THEN
+            INSERT (NAME) VALUES (P_UNIT);
+        COMMIT;
+    END INSERT_NEW_UNIT;
+
+	PROCEDURE INSERT_NEW_USER (P_FIRSTNAME IN VARCHAR2, P_LASTNAME IN VARCHAR2, P_EMAIL IN VARCHAR2)
+    IS
+    BEGIN
+        MERGE INTO T_USER DEST USING (SELECT P_FIRSTNAME AS FIRSTNAME, P_LASTNAME AS LASTNAME, P_EMAIL AS EMAIL FROM DUAL) SRC ON (SRC.EMAIL = DEST.EMAIL)
+        WHEN NOT MATCHED THEN
+            INSERT (FIRSTNAME, LASTNAME, EMAIL) VALUES (P_FIRSTNAME, P_LASTNAME, P_EMAIL);
+        COMMIT;
+    END INSERT_NEW_USER;
+
+PROCEDURE INSERT_NEW_TRANSLATION (P_TRANSLATION IN VARCHAR2, P_VOCABULARY IN VARCHAR2, P_UNIT IN VARCHAR2, P_LANGUAGE IN VARCHAR)
+    IS
+    BEGIN
+        MERGE INTO T_TRANSLATION DEST USING (SELECT P_TRANSLATION AS TRANSLATION,(SELECT V.ID FROM T_VOCABULARY V INNER JOIN T_UNIT U ON U.ID = U.ID WHERE V.VOCABULARY = P_VOCABULARY AND U.NAME = P_UNIT) AS VOCABULARY_ID, P_VOCABULARY AS VOCABULARY,P_LANGUAGE AS LANGUAGE FROM DUAL)
+        SRC ON (SRC.VOCABULARY_ID = DEST.VOCABULARY_ID AND SRC.TRANSLATION = DEST.TRANSLATION)
+        WHEN NOT MATCHED THEN
+            INSERT (TRANSLATION, VOCABULARY, LANGUAGE_ID, VOCABULARY_ID) VALUES (P_TRANSLATION, P_VOCABULARY, (SELECT ID FROM T_LANGUAGE WHERE NAME = P_LANGUAGE), (SELECT ID FROM T_VOCABULARY WHERE VOCABULARY = P_VOCABULARY));
+        COMMIT;
+    END INSERT_NEW_TRANSLATION;
+
+PROCEDURE INSERT_NEW_VOCABULARY (P_VOCABULARY IN VARCHAR2, P_UNIT IN VARCHAR2, P_LANGUAGE IN VARCHAR2)
+    IS
+    BEGIN
+        MERGE INTO T_VOCABULARY DEST USING (SELECT P_VOCABULARY AS VOCABULARY, P_UNIT AS UNIT, P_LANGUAGE AS LANGUAGE FROM DUAL) SRC ON (SRC.VOCABULARY = DEST.VOCABULARY)
+        WHEN NOT MATCHED THEN
+            INSERT (VOCABULARY, UNIT_ID, LANGUAGE_ID) VALUES (P_VOCABULARY, (SELECT ID FROM T_UNIT WHERE NAME = P_UNIT), (SELECT ID FROM T_LANGUAGE WHERE NAME = P_LANGUAGE));
+        COMMIT;
+    END INSERT_NEW_VOCABULARY;
+
+	PROCEDURE CREATE_NEW_STATISTIC (P_CATEGORY IN NUMBER, P_UNIT IN VARCHAR2, P_USER_ID IN NUMBER)
+    IS V_STATISTIC_ID NUMBER;
+    BEGIN
+--create the statistic itself
+        INSERT INTO T_STATISTIC (USER_ID) VALUES (P_USER_ID);
+        COMMIT;
+
+--load variables
+        SELECT ID INTO V_STATISTIC_ID FROM T_STATISTIC WHERE ROWID=(SELECT MAX(ROWID) FROM T_STATISTIC);
+
+
+        FOR	I IN (SELECT DISTINCT MIN(VOC_ID) AS ID FROM V_ALL_VOCABULARY_ENTRIES WHERE (CATEGORY = P_CATEGORY OR P_CATEGORY = -1) AND (UNIT_NAME = P_UNIT OR P_UNIT = ' ') GROUP BY TRANSLATION)
+        LOOP
+            INSERT INTO T_VOCABULARY_IN_STATISTIC (STATISTIC_ID, VOCABULARY_ID) VALUES (V_STATISTIC_ID, I.ID);
+            COMMIT;
+        END LOOP;
+
+    END CREATE_NEW_STATISTIC;
+end inserts ;
+/
+BEGIN
+DBMS_SCHEDULER.CREATE_JOB (
+    job_name        =>  'CAT0',
+    job_type        =>  'PLSQL_BLOCK',
+    job_action      =>  'CATEGORY(0);',
+    start_date      =>  SYSTIMESTAMP,
+    enabled         =>  TRUE,
+    repeat_interval =>  'FREQ=DAILY; BYHOUR=8;',
+    auto_drop       =>  TRUE,
+    comments        =>  '');
+END;
+/
+BEGIN
+DBMS_SCHEDULER.CREATE_JOB (
+    job_name        =>  'CAT1',
+    job_type        =>  'PLSQL_BLOCK',
+    job_action      =>  'CATEGORY(1);',
+    start_date      =>  SYSTIMESTAMP,
+    enabled         =>  TRUE,
+    repeat_interval =>  'FREQ=DAILY; INTERVAL=2',
+    auto_drop       =>  TRUE,
+    comments        =>  '');
+END;
+/
+BEGIN
+DBMS_SCHEDULER.CREATE_JOB (
+    job_name        =>  'CAT2',
+    job_type        =>  'PLSQL_BLOCK',
+    job_action      =>  'CATEGORY(2);',
+    start_date      =>  SYSTIMESTAMP,
+    enabled         =>  TRUE,
+    repeat_interval =>  'FREQ=DAILY; INTERVAL=3;',
+    auto_drop       =>  TRUE,
+    comments        =>  '');
+END;
+/
+BEGIN
+DBMS_SCHEDULER.CREATE_JOB (
+    job_name        =>  'CAT3',
+    job_type        =>  'PLSQL_BLOCK',
+    job_action      =>  'CATEGORY(3);',
+    start_date      =>  SYSTIMESTAMP,
+    enabled         =>  TRUE,
+    repeat_interval =>  'FREQ=DAILY; INTERVAL=4;',
+    auto_drop       =>  TRUE,
+    comments        =>  '');
+END;
+/
+BEGIN
+DBMS_SCHEDULER.CREATE_JOB (
+    job_name        =>  'CAT4',
+    job_type        =>  'PLSQL_BLOCK',
+    job_action      =>  'CATEGORY(4);',
+    start_date      =>  SYSTIMESTAMP,
+    enabled         =>  TRUE,
+    repeat_interval =>  'FREQ=DAILY; INTERVAL=5;',
+    auto_drop       =>  TRUE,
+    comments        =>  '');
+END;
+/
+BEGIN
+DBMS_SCHEDULER.CREATE_JOB (
+    job_name        =>  'CAT5',
+    job_type        =>  'PLSQL_BLOCK',
+    job_action      =>  'CATEGORY(5);',
+    start_date      =>  SYSTIMESTAMP,
+    enabled         =>  TRUE,
+    repeat_interval =>  'FREQ=DAILY; INTERVAL=6;',
+    auto_drop       =>  TRUE,
+    comments        =>  '');
+END;
+/
+BEGIN
+
+
+INSERT_NEW_LANGUAGE('EN');
+INSERT_NEW_LANGUAGE('DE');
+
+INSERT_NEW_UNIT('LEKTION 1');
+
+INSERT_NEW_USER('Lisa', 'Milde', 'lisa.milde@triology.de');
+
+INSERT_NEW_VOCABULARY('option', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('analytical', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to apply', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('workflow', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('training', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to perform', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('outside infiltration', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to advise', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('carrer', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('job title', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to evaluate', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('broad', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('database', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('implementation', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to recommend', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to design', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('performance', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('findings', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to troubleshoot', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to operate', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('devices', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('overall', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('graphic', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('functionality', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to assist', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to integrate', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('website', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('apprenticeship', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('benefit', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('efficiency', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('local area network (LAN)', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('several', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('verbal', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to schedule', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('advice', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('focus', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to secure', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('storage', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('system analyst', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to handle', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('to outline', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('encryption', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('confidental', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('suggestion', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('maintenance', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('wide area network (WAN)', 'LEKTION 1', 'EN');
+INSERT_NEW_VOCABULARY('impact', 'LEKTION 1', 'EN');
+
+INSERT_NEW_VOCABULARY('Alternative, Möglichkeit', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('analytisch', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('anwenden', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Arbeitsablauf', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Ausbildung, Lehre', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('ausfuehren, verrichten', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Außeninfiltration', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('beraten', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Beruf, Laufbahn, Karriere', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Berufsbezeichnung', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('bewerten, auswerten, beurteilen', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('breit angelegt', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Datenbank', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Einfuehrung, Umsetzung', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('empfehlen', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('entwerfen, konstruieren', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Ergebnis, Erfolg', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Ergebnisse', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Fehler beheben', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('funktionieren, anwenden, arbeiten', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Geraete', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('gesamt', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('grafisch', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Handhabbarkeit', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('helfen, beistehen', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('integrieren', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Internetseite', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Lehre, Ausbildung', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Leistung, Nutzen', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Leistungsfähigkeit, Effizienz', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('lokales Netzwerk', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('mehrere', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('muendlich', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('planen, ansetzen, anberaumen', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Rat, Beratung', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Schwerpunkt', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('sichern, absichern, schuetzen', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Speicherung, Lagerung', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Systemberater', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('umgehen mit', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('umreissen, skizzieren', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Verschluesselung', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('vertraulich', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Vorschlag', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Wartung', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Weitverkehrsnetzwerk', 'LEKTION 1', 'DE');
+INSERT_NEW_VOCABULARY('Wirkung, Einfluss', 'LEKTION 1', 'DE');
+
+INSERT_NEW_TRANSLATION('Alternative', 'option', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Möglichkeit', 'option', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('analytisch', 'analytical', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('anwenden', 'to apply', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Arbeitsablauf', 'workflow', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Ausbildung', 'training', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Lehre', 'training', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('ausfuehren', 'to perform', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('verrichten', 'to perform', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Außeninfiltration', 'outside infiltration', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('beraten', 'to advise', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Beruf', 'carrer', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Laufbahn', 'carrer', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Karriere', 'carrer', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Berufsbezeichnung', 'job title', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('bewerten', 'to evaluate', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('auswerten', 'to evaluate', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('beurteilen', 'to evaluate', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('breit angelegt', 'broad', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Datenbank', 'database', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Einfuehrung', 'implementation', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Umsetzung', 'implementation', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('empfehlen', 'to recommend', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('entwerfen', 'to design', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('konstruieren', 'to design', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Ergebnis', 'performance', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Erfolg', 'performance', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Ergebnisse', 'findings', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Fehler beheben', 'to troubleshoot', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('funktionieren', 'to operate', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('anwenden', 'to operate', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('arbeiten', 'to operate', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Geraete', 'devices', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('gesamt', 'overall', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('grafisch', 'graphic', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Handhabbarkeit', 'functionality', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('helfen', 'to assist', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('beistehen', 'to assist', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('integrieren', 'to integrate', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Internetseite', 'website', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Lehre', 'apprenticeship', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Ausbildung', 'apprenticeship', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Leistung', 'benefit', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Nutzen', 'benefit', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Leistungsfähigkeit', 'efficiency', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Effizienz', 'efficiency', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('lokales Netzwerk', 'local area network (LAN)', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('mehrere', 'several', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('muendlich', 'verbal', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('planen', 'to schedule', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('ansetzen', 'to schedule', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('anberaumen', 'to schedule', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Rat', 'advice', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Beratung', 'advice', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Schwerpunkt', 'focus', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('sichern', 'to secure', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('absichern', 'to secure', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('schuetzen', 'to secure', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Speicherung', 'storage', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Lagerung', 'storage', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Systemberater', 'system analyst', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('umgehen mit', 'to handle', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('umreissen', 'to outline', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('skizzieren', 'to outline', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Verschluesselung', 'encryption', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('vertraulich', 'confidental', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Vorschlag', 'suggestion', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Wartung', 'maintenance', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Weitverkehrsnetzwerk', 'wide area network (WAN)', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Wirkung', 'impact', 'LEKTION 1', 'DE');
+INSERT_NEW_TRANSLATION('Einfluss', 'impact', 'LEKTION 1', 'DE');
+
+INSERT_NEW_TRANSLATION('option', 'Alternative, Möglichkeit', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('analytical', 'analytisch', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to apply', 'anwenden', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('workflow', 'Arbeitsablauf', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('training', 'Ausbildung, Lehre', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to perform', 'ausfuehren, verrichten', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('outside infiltration', 'Außeninfiltration', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to advise', 'beraten', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('carrer', 'Beruf, Laufbahn, Karriere', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('job title', 'Berufsbezeichnung', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to evaluate', 'bewerten, auswerten, beurteilen', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('broad', 'breit angelegt', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('database', 'Datenbank', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('implementation', 'Einfuehrung, Umsetzung', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to recommend', 'empfehlen', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to design', 'entwerfen, konstruieren', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('performance', 'Ergebnis, Erfolg', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('findings', 'Ergebnisse', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to troubleshoot', 'Fehler beheben', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to operate', 'funktionieren, anwenden, arbeiten', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('devices', 'Geraete', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('overall', 'gesamt', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('graphic', 'grafisch', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('functionality', 'Handhabbarkeit', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to assist', 'helfen, beistehen', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to integrate', 'integrieren', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('website', 'Internetseite', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('apprenticeship', 'Lehre, Ausbildung', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('benefit', 'Leistung, Nutzen', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('efficiency', 'Leistungsfähigkeit, Effizienz', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('local area network (LAN)', 'lokales Netzwerk', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('several', 'mehrere', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('verbal', 'muendlich', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to schedule', 'planen, ansetzen, anberaumen', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('advice', 'Rat, Beratung', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('focus', 'Schwerpunkt', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to secure', 'sichern, absichern, schuetzen', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('storage', 'Speicherung, Lagerung', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('system analyst', 'Systemberater', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to handle', 'umgehen mit', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('to outline', 'umreissen, skizzieren', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('encryption', 'Verschluesselung', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('confidental', 'vertraulich', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('suggestion', 'Vorschlag', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('maintenance', 'Wartung', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('wide area network (WAN)', 'Weitverkehrsnetzwerk', 'LEKTION 1', 'EN');
+INSERT_NEW_TRANSLATION('impact', 'Wirkung, Einfluss', 'LEKTION 1', 'EN');
+
+END;
+BEGIN
+
+INSERT INTO T_RESSOURCES (RESSOURCE) VALUES ('Hallo ');
+INSERT INTO T_RESSOURCES (RESSOURCE) VALUES ('Du hast schon lange keine Vokabeln mehr gelernt. Deshalb solltest Du das jetzt unbedingt tun.');
+INSERT INTO T_RESSOURCES (RESSOURCE) VALUES ('Unten siehst Du die Vokabeln, die Du lernen solltest. :)');
+INSERT INTO T_RESSOURCES (RESSOURCE) VALUES ('Die Vokabel ');
+INSERT INTO T_RESSOURCES (RESSOURCE) VALUES (' war richtig. Gut gemacht! :)');
+INSERT INTO T_RESSOURCES (RESSOURCE) VALUES (' war leider nicht richtig. Die richtige Uebersetzung lautet: ');
+INSERT INTO T_RESSOURCES (RESSOURCE) VALUES ('Deine Antwort war: ' );
+
+END;
+/

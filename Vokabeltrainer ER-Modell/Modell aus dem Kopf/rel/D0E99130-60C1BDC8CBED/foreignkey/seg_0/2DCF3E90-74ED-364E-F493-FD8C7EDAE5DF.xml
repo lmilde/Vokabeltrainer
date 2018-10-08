@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="2DCF3E90-74ED-364E-F493-FD8C7EDAE5DF" containerWithKeyObject="808B778F-D8CC-F412-2E1E-FE3BAB8DF70C" localFKIndex="5E1DCCE8-40F2-435B-25DA-5768DA268242" name="Translation_Vocabulary_FK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<generatorID>9654071B-E12C-11F8-0735-7624EBF33B2B</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<referredTableLongName>Vocabulary</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>9E1A7207-D624-2417-CBD8-3EBE70280703</referredTableID>
+<keyObject>169828E2-762C-3FF3-FB01-6774F04DEE5F</keyObject>
+<referredKeyID>169828E2-762C-3FF3-FB01-6774F04DEE5F</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

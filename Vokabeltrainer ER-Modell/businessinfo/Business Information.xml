@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BusinessInfoDesign class="oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign" name="Business Information" id="BA3A34A0-9F81-2138-EE0F-F84823873C98">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 10:48:04 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</BusinessInfoDesign>

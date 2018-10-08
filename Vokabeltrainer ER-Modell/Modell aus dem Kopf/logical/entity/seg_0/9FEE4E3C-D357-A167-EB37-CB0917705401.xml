@@ -1,0 +1,86 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="9FEE4E3C-D357-A167-EB37-CB0917705401" name="Vocabulary">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:24:22 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Vocabulary" id="1579BB9C-965C-CE21-4FEA-903BF0AD86E1">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:24:32 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>297B7A15-D456-5D52-6675-B97FBD4EE797</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID" id="5EEA52D9-D2FC-76AE-BD10-72FC8AB24A7D">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:24:42 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID1" id="7CD13992-12F8-6C07-01A3-A1C7EDA156B2">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:31:49 UTC</createdTime>
+<generatorID>12B638FD-5497-C2A9-91BC-7491BB7C7468</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<referedAttribute>C586C34B-0905-B2F1-9F5B-672355FA17B0</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID2" id="3BD3FA24-7AEC-DF34-DBEB-90C256CBC7B7">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:32:02 UTC</createdTime>
+<generatorID>181E9221-A3F5-9BE4-B8E0-41F46D8BA975</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<referedAttribute>26785D1D-445E-BD0A-0740-5DD2CE8DD8EB</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="12E7B5F5-F9A1-71C3-3FAF-7D97FD5D152F" name="Vocabulary PK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:24:56 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>5EEA52D9-D2FC-76AE-BD10-72FC8AB24A7D</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="95D7AE28-0F77-E045-DEC1-3536EAF18360" containerWithKeyObject="9E1A7207-D624-2417-CBD8-3EBE70280703" localFKIndex="A0682D92-53EA-44D8-95B3-D17A2408C364" name="Vocabulary_Langauge_FK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<generatorID>181E9221-A3F5-9BE4-B8E0-41F46D8BA975</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<referredTableLongName>Langauge</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>F7D94BB3-9FC0-095F-C5CC-501626124BAB</referredTableID>
+<keyObject>913CF930-AC08-5767-57A0-BC474BD5F415</keyObject>
+<referredKeyID>913CF930-AC08-5767-57A0-BC474BD5F415</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

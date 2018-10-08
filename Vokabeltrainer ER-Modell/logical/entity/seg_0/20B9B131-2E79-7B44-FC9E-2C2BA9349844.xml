@@ -1,0 +1,101 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="20B9B131-2E79-7B44-FC9E-2C2BA9349844" name="Translation">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:01:55 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="ID" id="BC4C24B1-4248-6266-2238-147E820EACF7">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:02:03 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Translation" id="CCB0C043-B37B-8A7A-6CC1-7DD8C8EADA49">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:02:10 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>297B7A15-D456-5D52-6675-B97FBD4EE797</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID1" id="6195AA70-A113-710C-0B7D-7BFBE3BD1AC1">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:02:25 UTC</createdTime>
+<generatorID>253E299C-4D9B-478E-C748-19A55301FA0A</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<referedAttribute>EA278E7C-03D7-0340-B246-9C2B493378E6</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID11" id="A9C0105C-7B14-1ADD-B01C-224EC1B06935">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:02:25 UTC</createdTime>
+<generatorID>253E299C-4D9B-478E-C748-19A55301FA0A</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<referedAttribute>30962599-905B-341D-3AFE-99CEEC323631</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID2" id="EAB53FA8-6AA6-CF27-790D-8B5DF984A0A4">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:03:28 UTC</createdTime>
+<generatorID>E2DFBB25-DE3C-28FA-E7EE-7EB35327DD86</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<referedAttribute>9CAA89F9-ABBD-3AE1-72CF-361A5A8AC650</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>297B7A15-D456-5D52-6675-B97FBD4EE797</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="34541C9F-C138-5A85-A3DC-ADCDAFCC6EA1" name="Translation PK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:02:07 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>BC4C24B1-4248-6266-2238-147E820EACF7</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="4EB998E8-2E10-29B1-771E-30AD4C6569B8" containerWithKeyObject="58DCDD07-2CBD-E380-60DC-51F03BF7232D" localFKIndex="4C828FA3-6FFD-35DC-9E74-63ED532C3109" name="shows_learned_Statistic_FK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:04:48 UTC</createdTime>
+<generatorID>C85FBC13-9A48-5D24-17A8-AF4734257A5C</generatorID>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<referredTableLongName>Statistic</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>135CA693-1407-FF1D-8E9E-A008E901175F</referredTableID>
+<keyObject>C81F4ABF-3DD4-6803-FC77-63ABBCDAA290</keyObject>
+<referredKeyID>C81F4ABF-3DD4-6803-FC77-63ABBCDAA290</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

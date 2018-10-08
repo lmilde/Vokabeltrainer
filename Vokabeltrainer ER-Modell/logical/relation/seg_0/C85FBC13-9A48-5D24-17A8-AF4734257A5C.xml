@@ -1,0 +1,33 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="shows learned " directorySegmentName="seg_0" id="C85FBC13-9A48-5D24-17A8-AF4734257A5C">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 10:58:25 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>897FCC99-E1A7-08C7-4B32-62BFE7193CB3</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>F4C28069-80B3-DB8D-7EB0-BA23C7E81DA2</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<attribute name="Correct" id="CDEDBB03-B72F-4D17-E8EB-E05813B5BEBD">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 10:58:50 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</attribute>
+</attributes>
+</Relation>

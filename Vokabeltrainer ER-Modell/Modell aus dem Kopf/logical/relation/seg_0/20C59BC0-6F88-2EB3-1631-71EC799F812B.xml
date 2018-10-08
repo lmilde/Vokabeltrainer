@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="hasv4" directorySegmentName="seg_0" id="20C59BC0-6F88-2EB3-1631-71EC799F812B">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:22 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<engineerTo>
+<item key="D0E99130-71DE-636E-96B1-60C1BDC8CBED" value="true"/>
+</engineerTo>
+<sourcePk>4CCA8AAD-EC54-D33C-60CB-C193A402CFE8</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>933D42FB-FAEC-3036-5D3B-E8217E5C32CB</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>F4FE96BA-6A8F-A28E-3BCE-0F6BC6597698</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

@@ -1,0 +1,101 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="9E1A7207-D624-2417-CBD8-3EBE70280703" name="Vocabulary">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>9FEE4E3C-D357-A167-EB37-CB0917705401</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Vocabulary" id="F21C04BD-0ECE-D94A-BBB3-6E3C9F55258D">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>1579BB9C-965C-CE21-4FEA-903BF0AD86E1</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>297B7A15-D456-5D52-6675-B97FBD4EE797</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ID" id="B4FC92F0-8EED-FD32-660E-F2755C52CAA4">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>5EEA52D9-D2FC-76AE-BD10-72FC8AB24A7D</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Unit_ID" id="3389E8CD-A309-66AF-4150-3B0027E78485">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>7CD13992-12F8-6C07-01A3-A1C7EDA156B2</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="7C27453B-9844-FA3E-36B7-1FDD6AE2CFDE" referredColumn="5047CEA8-70D5-217E-2736-67A24622E098"/>
+</associations>
+</Column>
+<Column name="Langauge_ID" id="5880249E-9CEA-7954-B145-E1074B6F4E3C">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>3BD3FA24-7AEC-DF34-DBEB-90C256CBC7B7</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="95D7AE28-0F77-E045-DEC1-3536EAF18360" referredColumn="486BFE6C-A682-A1AD-C2D3-F5860FAF0A1D"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="169828E2-762C-3FF3-FB01-6774F04DEE5F" name="Vocabulary_PK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>12E7B5F5-F9A1-71C3-3FAF-7D97FD5D152F</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B4FC92F0-8EED-FD32-660E-F2755C52CAA4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2B039592-C864-9A3E-0B0F-6123A61F2669" name="Vocabulary_Unit_FK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>12B638FD-5497-C2A9-91BC-7491BB7C7468</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3389E8CD-A309-66AF-4150-3B0027E78485"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A0682D92-53EA-44D8-95B3-D17A2408C364" name="Vocabulary_Langauge_FK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<generatorID>181E9221-A3F5-9BE4-B8E0-41F46D8BA975</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5880249E-9CEA-7954-B145-E1074B6F4E3C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

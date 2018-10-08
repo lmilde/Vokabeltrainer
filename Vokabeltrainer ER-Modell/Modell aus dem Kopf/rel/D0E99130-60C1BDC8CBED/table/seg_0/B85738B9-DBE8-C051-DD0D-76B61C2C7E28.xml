@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="B85738B9-DBE8-C051-DD0D-76B61C2C7E28" name="shows">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Vocabulary_ID" id="82F2C9A8-E7FC-1892-B7D5-BA02DF4F4187">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B7E8E063-F02B-562B-466B-8954E287EEE8" referredColumn="B4FC92F0-8EED-FD32-660E-F2755C52CAA4"/>
+</associations>
+</Column>
+<Column name="Statistic_ID" id="7EE7E7BC-74E3-A935-E159-F0F328D028E9">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D1495451-C80D-E61E-292B-B9AAF1BD56E2" referredColumn="98011125-A21C-1FF1-BD21-5BBEDD49C96B"/>
+</associations>
+</Column>
+<Column name="Correct" id="B35C8446-6A8A-EB38-4715-09E997D275DB">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<generatorID>A8D8EFCD-06D6-FA28-CEE8-0F11EA430590</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<isRelationshipColumn>true</isRelationshipColumn>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="F17CA9C7-77BA-27C8-11D9-A6D54A171608" name="shows_PK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="82F2C9A8-E7FC-1892-B7D5-BA02DF4F4187"/>
+<colUsage columnID="7EE7E7BC-74E3-A935-E159-F0F328D028E9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="036E799E-A763-CE31-3C7E-8AD2B5B35119" name="shows_Vocabulary_FK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<generatorID>51573DFC-9ED9-E7DC-E12A-D3C4C3F20256</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="82F2C9A8-E7FC-1892-B7D5-BA02DF4F4187"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0DA9CFC6-5DA8-C60B-C540-9DFFF5566977" name="shows_Statistic_FK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<generatorID>51573DFC-9ED9-E7DC-E12A-D3C4C3F20256</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7EE7E7BC-74E3-A935-E159-F0F328D028E9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

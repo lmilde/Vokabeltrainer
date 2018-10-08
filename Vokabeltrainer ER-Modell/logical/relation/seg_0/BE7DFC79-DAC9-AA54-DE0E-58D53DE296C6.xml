@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="has av1" directorySegmentName="seg_0" id="BE7DFC79-DAC9-AA54-DE0E-58D53DE296C6">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 12:03:41 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<engineerTo>
+<item key="AB07CEF6-E9E8-7122-0E02-45BECCF3EEAF" value="true"/>
+</engineerTo>
+<sourcePk>BC2140E1-9740-61F4-A5D1-972604EF524D</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>60166484-C0CC-7EE5-6149-1B6E4447961D</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>897FCC99-E1A7-08C7-4B32-62BFE7193CB3</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="Modell aus dem Kopf" id="A0E52622-7199-42B6-3762-C998A69C76E6" version="3.5">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:24:13 UTC</createdTime>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>A0E52622-7199-42B6-3762-C998A69C76E6</designId>
+</OSDM_Design>

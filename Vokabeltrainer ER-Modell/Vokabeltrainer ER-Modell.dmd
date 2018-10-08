@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="Vokabeltrainer ER-Modell" id="913790BF-998A-565E-52B9-BB0828FE2794" version="3.5">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-23 10:48:04 UTC</createdTime>
+<ownerDesignName>Vokabeltrainer ER-Modell</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>913790BF-998A-565E-52B9-BB0828FE2794</designId>
+</OSDM_Design>

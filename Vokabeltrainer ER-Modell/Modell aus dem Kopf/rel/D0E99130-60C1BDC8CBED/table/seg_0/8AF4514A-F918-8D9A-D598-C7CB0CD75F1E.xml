@@ -1,0 +1,63 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="8AF4514A-F918-8D9A-D598-C7CB0CD75F1E" name="Statistic">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>F4FE96BA-6A8F-A28E-3BCE-0F6BC6597698</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID" id="98011125-A21C-1FF1-BD21-5BBEDD49C96B">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>564ADD04-6815-B926-E70B-72B7A8F31C0E</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="User_ID" id="369AC232-89B4-5A6C-9E26-09582A74E497">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>06B74ECC-7D63-0EC2-B19D-CFE801DB414D</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>819B73CA-1981-6008-3726-DCAB05AE190A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6BEADA9C-ED8B-84D3-7C15-CAB9D50A065B" referredColumn="EA0252AB-70B7-E16C-7939-5E863B50944C"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A46DFCAB-A83D-A1A0-9352-ED5D88AA3026" name="Statistic_PK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:36 UTC</createdTime>
+<generatorID>B5310DCD-A60D-0C77-D141-51D6D72CACF7</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="98011125-A21C-1FF1-BD21-5BBEDD49C96B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="135DB03F-1E0F-06FF-F792-5B9EDBD68771" name="Statistic_User_FK">
+<createdBy>lmilde</createdBy>
+<createdTime>2018-02-26 10:33:37 UTC</createdTime>
+<generatorID>20C59BC0-6F88-2EB3-1631-71EC799F812B</generatorID>
+<ownerDesignName>Modell aus dem Kopf</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="369AC232-89B4-5A6C-9E26-09582A74E497"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
